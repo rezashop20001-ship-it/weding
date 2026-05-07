@@ -3,184 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Digital - Landing Page</title>
+    <title>Undangan Digital Fix</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html { 
+            width: 100%; height: 100%; 
+            overflow: hidden; background-color: #f4f4f4; 
         }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Container utama - Simulasi layar HP */
-        .container {
+        /* Container utama: Simulasi layar HP Portrait */
+        .wrapper {
             position: relative;
             width: 100%;
             height: 100vh;
-            max-width: 500px;
+            max-width: 450px; /* Lebar maksimal layar HP */
             margin: 0 auto;
             overflow: hidden;
-            animation: opening 2s ease-in-out;
         }
 
-        /* Base class untuk elemen layering */
+        /* Base style untuk semua elemen */
         .layer {
             position: absolute;
+            display: block;
             pointer-events: none;
-            background-size: contain;
-            background-repeat: no-repeat;
         }
 
-        /* 1. Background Paling Belakang (Gunung) */
+        /* 1. BACKGROUND (Paling Belakang) */
         .bg-utama {
             z-index: 1;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             object-fit: cover;
         }
 
-        /* 2. Rumah Adat (Posisi agak ke bawah) */
+        /* 2. RUMAH ADAT (Letakkan di bawah tapi jangan terlalu tenggelam) */
         .rumah-adat {
             z-index: 2;
-            width: 90%;
-            bottom: 15%;
-            left: 5%;
+            width: 85%;
+            bottom: 12%;
+            left: 7.5%;
         }
 
-        /* 3. Logo & Tombol (Z-index 10 - Di belakang bunga depan) */
-        .content-middle {
+        /* 3. LOGO & TOMBOL (Z-index 5: Di belakang bunga, di depan rumah) */
+        .center-content {
             position: absolute;
+            z-index: 5;
             width: 100%;
-            height: 100%;
-            z-index: 10;
+            top: 22%; /* Menempatkan logo di area atas yang kosong */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 25vh; /* Mengatur tinggi logo agar pas di tengah atas */
             pointer-events: auto;
         }
 
-        .logo-img {
-            width: 70%;
-            margin-bottom: 50px;
-            animation: fadeInLogo 3s ease-in-out forwards;
-        }
+        .logo-img { width: 60%; margin-bottom: 25px; }
 
         .btn-buka {
-            padding: 15px 45px;
             background-color: #9d6b3d;
             color: white;
+            padding: 12px 35px;
+            border-radius: 25px;
             border: none;
-            border-radius: 50px;
             font-size: 13px;
-            letter-spacing: 1px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- POSISI BUNGA (Z-INDEX 20+) --- */
-        .bunga { z-index: 20; position: absolute; }
+        /* 4. BUNGA FRAME ATAS (Z-index 10) */
+        .b-kiri-atas { z-index: 10; top: -2%; left: -5%; width: 50%; }
+        .b-kanan-atas { z-index: 10; top: -2%; right: -5%; width: 50%; }
+        .b-t-a-kiri { z-index: 11; top: 0; left: 10%; width: 35%; }
+        .b-t-a-kanan { z-index: 11; top: 0; right: 10%; width: 35%; }
+        .b-t-a-kecil { z-index: 12; top: 8%; left: 0; width: 100%; }
 
-        /* Bunga Pojok Atas */
-        .b-kiri-atas { top: 0; left: 0; width: 45%; }
-        .b-kanan-atas { top: 0; right: 0; width: 45%; }
+        /* 5. BUNGA FRAME BAWAH (Z-index 15) */
+        .b-kiri-bawah { z-index: 15; bottom: 5%; left: -5%; width: 40%; }
+        .b-kanan-bawah { z-index: 15; bottom: 5%; right: -5%; width: 40%; }
+        .b-t-b-kiri { z-index: 16; bottom: 0; left: 0; width: 45%; }
+        .b-t-b-kanan { z-index: 16; bottom: 0; right: 0; width: 45%; }
 
-        /* Bunga Bingkai Atas (Lengkungan) */
-        .b-t-a-kiri { top: 0; left: 15%; width: 30%; }
-        .b-t-a-kanan { top: 0; right: 15%; width: 30%; }
-        .b-t-a-kecil { top: 8%; left: 0; width: 100%; }
-
-        /* Bunga Samping Tengah (Pohon/Ranting) */
-        .b-kiri-bawah { bottom: 15%; left: 0; width: 35%; }
-        .b-kanan-bawah { bottom: 15%; right: 0; width: 35%; }
-
-        /* Bunga Frame Bawah */
-        .b-t-b-kiri { bottom: 0; left: 0; width: 40%; }
-        .b-t-b-kanan { bottom: 0; right: 0; width: 40%; }
-        
-        /* Bunga Utama yang Menutupi Bawah Rumah */
-        .b-bawah-utama { 
-            z-index: 25; 
-            bottom: -2%; 
-            left: 0; 
-            width: 100%; 
+        /* 6. BUNGA UTAMA BAWAH (Foreground Paling Depan - Z-index 20) */
+        .b-bawah-utama {
+            z-index: 20;
+            bottom: -2%;
+            left: 0;
+            width: 100%; /* Penutup bagian bawah rumah adat */
         }
 
         /* --- ANIMASI --- */
-        @keyframes opening { from { opacity: 0; } to { opacity: 1; } }
-        
-        @keyframes fadeInLogo {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Animasi Melayang Pelan */
         .float { animation: floatAnim 4s ease-in-out infinite; }
         @keyframes floatAnim {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
 
-        /* Animasi Geser Halus */
-        .slide { animation: slideAnim 6s ease-in-out infinite; }
-        @keyframes slideAnim {
+        .side { animation: sideAnim 5s ease-in-out infinite; }
+        @keyframes sideAnim {
             0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(8px); }
+            50% { transform: translateX(10px); }
         }
 
         /* Kelopak Jatuh */
         .kelopak {
             position: absolute;
             z-index: 30;
-            width: 20px;
-            top: -50px;
-            animation: falling 7s linear infinite;
+            width: 18px;
+            top: -20px;
+            animation: falling 8s linear infinite;
         }
         @keyframes falling {
             0% { transform: translateY(0) rotate(0); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <img src="background.jpg" class="bg-utama" alt="bg">
-
-        <img src="rumah_adat.png" class="layer rumah-adat" alt="rumah">
-
-        <div class="content-middle">
-            <img src="logo.png" class="logo-img" alt="logo">
-            <button class="btn-buka">BUKA UNDANGAN</button>
-        </div>
-
-        <img src="bunga_kiri_atas.png" class="bunga b-kiri-atas">
-        <img src="bunga_kanan_atas.png" class="bunga b-kanan-atas">
-        <img src="bunga_tengah_atas_kiri.png" class="bunga b-t-a-kiri">
-        <img src="bunga_tengah_atas_kanan.png" class="bunga b-t-a-kanan">
-        <img src="bunga_tengah_atas_kecil.png" class="bunga b-t-a-kecil slide">
-
-        <img src="bunga_kiri_bawah.png" class="bunga b-kiri-bawah float">
-        <img src="bunga_kanan_bawah.png" class="bunga b-kanan-bawah float">
-        <img src="bunga_tengah_bawah_kiri.png" class="bunga b-t-b-kiri">
-        <img src="bunga_tengah_bawah_kanan.png" class="bunga b-t-b-kanan">
-        
-        <img src="bunga_tengah_bawah_utama.png" class="bunga b-bawah-utama float">
-
-        <img src="kelopak1.png" class="kelopak" style="left:20%; animation-delay: 0s;">
-        <img src="kelopak2.png" class="kelopak" style="left:50%; animation-delay: 2s;">
-        <img src="kelopak3.png" class="kelopak" style="left:80%; animation-delay: 4s;">
-    </div>
-
-</body>
-</html>
+            10% { opacity: 0.
